@@ -80,6 +80,28 @@ base = fixtures["piece-of-cake.json"]
 comparison_base = fixtures["chinese-equipment.json"]
 
 
+extensions_omitted_packet = copy.deepcopy(base)
+extensions_omitted_packet.pop("extensions", None)
+extensions_omitted_errors = errors_for(extensions_omitted_packet)
+extensions_omitted_result = "PASS" if not extensions_omitted_errors else "FAIL"
+print(f"Valid extensions omitted check: {extensions_omitted_result}")
+if extensions_omitted_errors:
+    print(f"  {describe_error(extensions_omitted_errors)}")
+    failures.append("packet with extensions omitted failed")
+
+
+nonempty_extensions_packet = copy.deepcopy(base)
+nonempty_extensions_packet["extensions"] = {
+    "contextEnglish.reviewSeeds.v1": {"example": True}
+}
+nonempty_extensions_errors = errors_for(nonempty_extensions_packet)
+nonempty_extensions_result = "PASS" if not nonempty_extensions_errors else "FAIL"
+print(f"Valid non-empty extensions check: {nonempty_extensions_result}")
+if nonempty_extensions_errors:
+    print(f"  {describe_error(nonempty_extensions_errors)}")
+    failures.append("packet with non-empty extensions failed")
+
+
 def missing_schema_version() -> Any:
     packet = copy.deepcopy(base)
     del packet["schemaVersion"]
@@ -128,6 +150,12 @@ def empty_usage() -> Any:
     return packet
 
 
+def empty_extensions() -> Any:
+    packet = copy.deepcopy(base)
+    packet["extensions"] = {}
+    return packet
+
+
 def comparison_with_one_term() -> Any:
     packet = copy.deepcopy(comparison_base)
     packet["comparisons"][0]["terms"] = ["device"]
@@ -155,6 +183,7 @@ invalid_cases: list[tuple[str, Callable[[], Any]]] = [
     ("illegal primaryDomain", illegal_primary_domain),
     ("illegal sourceLanguage", illegal_source_language),
     ("empty usage object", empty_usage),
+    ("empty extensions object", empty_extensions),
     ("comparison with fewer than two terms", comparison_with_one_term),
     ("unknown top-level field", unknown_top_level_field),
     ("invalid RFC 3339 date-time", invalid_date_time),

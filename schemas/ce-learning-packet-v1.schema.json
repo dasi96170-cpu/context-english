@@ -30,6 +30,7 @@
     "learningAdvice": { "$ref": "#/$defs/learningAdvice" },
     "extensions": {
       "type": "object",
+      "minProperties": 1,
       "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9._-]+$" },
       "additionalProperties": true
     }
