@@ -364,6 +364,51 @@ CE Learning Packet v1 的 `multipleMeanings` 只保存重要義項列表，不�
 
 不必列出罕見或對目前使用者沒有價值的衍生詞。
 
+Word Family（詞族）在本專案中，指以目前學習詞為核心，由該詞本身，以及在現代英語中與它具有直接派生關係、不同詞彙或詞性功能，且對目前學習情境有價值的詞所組成。它不是所有具有共同歷史字根的詞的集合。以 `operate` 為例，依目前情境與學習價值，核心 Word Family 可包含：
+
+- `operate` — verb
+- `operation` — noun
+- `operator` — noun
+- `operational` — adjective
+- `operationally` — adverb
+- `operable` — adjective
+- `operability` — noun
+
+Inflection／Verb Forms（詞形變化）則是同一個 lemma 因文法需要產生的形式，不應只因拼字不同就放入 `wordFamily`。例如：
+
+- `operate / operates / operated / operating`
+- `run / ran / run / running`
+- `see / saw / seen`
+- `go / went / gone`
+
+其中 `operates`、`operated`、`operating` 若只是第三人稱單數、過去式、過去分詞、現在分詞或動名詞，仍是 `operate` 的 verb forms，不是獨立的 Word Family 成員。`ran`、`saw`、`seen`、`went`、`gone` 也適用相同原則。
+
+遇到 `-ing` 或 `-ed` 邊界案例時，不能只看字尾或表面詞性分類。例如 `operating temperature`、`operating conditions` 中的 `operating` 可能在目前語境中具有形容詞或專門修飾功能，但應先判斷：
+
+1. 它是否只是原動詞在句中的文法詞形。
+2. 它是否已具有值得獨立教學的詞彙、形容詞或領域用法。
+
+即使需要教 `operating` 的形容詞用法，也必須清楚區分「現在分詞／動名詞形式」與「值得獨立教學的詞彙功能」，不得自動把它當成核心 Word Family 成員。
+
+CE Learning Packet v1 目前沒有 `verbForms` 專用欄位。動詞變化可在人類可讀教學、`analysis` 的情境說明或 `examples` 等合適位置說明；不得為了有地方保存，就把 verb forms 塞入 `wordFamily`。此限制不構成新增 Schema 欄位的理由。
+
+Word Family 是學習與使用上的詞族，不等於所有 etymologically related words。不要因為共同字源或拉丁詞根而無限制擴張。例如 `cooperate`、`cooperation`、`cooperative` 不應自動列入 `operate` 的核心 Word Family。若字源關係對理解確實有價值，可以另外簡短標示為 related by root／etymology，但必須與目前單字的核心 Word Family 分開。
+
+正確的 Word Family 例子：
+
+- `operate` → `operation / operator / operational`
+- `automatic` → `automatically`
+- `possible` → `possibility / possibly`
+
+不應只因形式不同就視為 Word Family 成員的 verb forms：
+
+- `operate` → `operated / operating`
+- `run` → `ran / running`
+- `see` → `saw / seen`
+- `go` → `went / gone`
+
+如果某個形式同時具有獨立詞彙功能，必須依實際語境、使用方式與學習價值判斷，不能只依字尾決定分類。
+
 ### 6.4 情境式例句
 
 例句應：
