@@ -1,0 +1,403 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-english.local/schemas/ce-learning-packet-v1.schema.json",
+  "title": "CE Learning Packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packetId",
+    "encounter",
+    "knowledgeItems",
+    "learningAdvice"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "packetId": { "$ref": "#/$defs/sourceId" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "encounter": { "$ref": "#/$defs/encounter" },
+    "knowledgeItems": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/knowledgeItem" }
+    },
+    "comparisons": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/comparison" }
+    },
+    "sentenceAnalysis": { "$ref": "#/$defs/sentenceAnalysis" },
+    "learningAdvice": { "$ref": "#/$defs/learningAdvice" },
+    "extensions": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9._-]+$" },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "sourceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "stringArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+    "syllableArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+    "encounter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "originalInput",
+        "inputType",
+        "primaryDomain",
+        "sourceType",
+        "sourceLanguage"
+      ],
+      "properties": {
+        "originalInput": { "$ref": "#/$defs/nonEmptyString" },
+        "inputType": {
+          "enum": [
+            "englishWord",
+            "englishPhrase",
+            "englishSentence",
+            "userWrittenEnglish",
+            "chineseConcept",
+            "chineseSentence",
+            "comparison",
+            "image",
+            "engineeringScreen",
+            "mixed"
+          ]
+        },
+        "contextDescription": { "$ref": "#/$defs/nonEmptyString" },
+        "primaryDomain": {
+          "enum": [
+            "general",
+            "engineering",
+            "software",
+            "work",
+            "business",
+            "travel",
+            "dailyLife",
+            "social",
+            "entertainment",
+            "other"
+          ]
+        },
+        "subdomains": { "$ref": "#/$defs/stringArray" },
+        "sourceType": {
+          "enum": [
+            "typedText",
+            "pastedText",
+            "image",
+            "screenshot",
+            "camera",
+            "conversation",
+            "other"
+          ]
+        },
+        "sourceLanguage": {
+          "enum": ["en", "zh-Hant", "mixed", "und"]
+        },
+        "sourceName": { "$ref": "#/$defs/nonEmptyString" },
+        "sourceLocation": { "$ref": "#/$defs/nonEmptyString" },
+        "encounteredAt": { "type": "string", "format": "date-time" },
+        "imageReference": { "$ref": "#/$defs/nonEmptyString" },
+        "originalQuestion": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "knowledgeItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "expression", "currentMeaning", "coreConcept"],
+      "properties": {
+        "type": {
+          "enum": [
+            "word",
+            "term",
+            "phrase",
+            "phrasalVerb",
+            "idiom",
+            "chunk",
+            "sentencePattern"
+          ]
+        },
+        "expression": { "$ref": "#/$defs/nonEmptyString" },
+        "lemma": { "$ref": "#/$defs/nonEmptyString" },
+        "partOfSpeech": { "$ref": "#/$defs/nonEmptyString" },
+        "ipa": { "$ref": "#/$defs/nonEmptyString" },
+        "syllables": { "$ref": "#/$defs/syllableArray" },
+        "stress": { "$ref": "#/$defs/nonEmptyString" },
+        "currentMeaning": { "$ref": "#/$defs/nonEmptyString" },
+        "coreConcept": { "$ref": "#/$defs/nonEmptyString" },
+        "usage": { "$ref": "#/$defs/usage" },
+        "analysis": { "$ref": "#/$defs/analysis" }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "frequency": {
+          "enum": ["veryCommon", "common", "domainCommon", "uncommon", "rareOrDated"]
+        },
+        "register": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["informal", "neutral", "formal", "veryFormal", "technical"] }
+        },
+        "commonContexts": { "$ref": "#/$defs/stringArray" },
+        "naturalness": {
+          "enum": ["nativeCommon", "natural", "contextDependent", "grammaticalButUnnatural", "unnatural"]
+        },
+        "learningPriority": {
+          "enum": ["mustLearn", "recommended", "recognitionOnly", "notNow"]
+        },
+        "vocabularyRole": { "enum": ["active", "passive", "both"] }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "contextualMeaning": { "$ref": "#/$defs/nonEmptyString" },
+        "whyThisWord": { "$ref": "#/$defs/nonEmptyString" },
+        "namingLogic": { "$ref": "#/$defs/nonEmptyString" },
+        "whyNotAlternatives": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/alternativeExplanation" }
+        },
+        "multipleMeanings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/meaningEntry" }
+        },
+        "literalMeaning": { "$ref": "#/$defs/nonEmptyString" },
+        "actualMeaning": { "$ref": "#/$defs/nonEmptyString" },
+        "collocations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/relatedExpression" }
+        },
+        "phrases": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/relatedExpression" }
+        },
+        "phrasalVerbs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/relatedExpression" }
+        },
+        "idioms": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/relatedExpression" }
+        },
+        "wordFamily": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/wordFamilyEntry" }
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/example" }
+        }
+      }
+    },
+    "alternativeExplanation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alternative", "explanation"],
+      "properties": {
+        "alternative": { "$ref": "#/$defs/nonEmptyString" },
+        "explanation": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "meaningEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["meaning"],
+      "properties": {
+        "meaning": { "$ref": "#/$defs/nonEmptyString" },
+        "contexts": { "$ref": "#/$defs/stringArray" },
+        "frequency": {
+          "enum": ["veryCommon", "common", "domainCommon", "uncommon", "rareOrDated"]
+        }
+      }
+    },
+    "relatedExpression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expression"],
+      "properties": {
+        "expression": { "$ref": "#/$defs/nonEmptyString" },
+        "meaning": { "$ref": "#/$defs/nonEmptyString" },
+        "usageNote": { "$ref": "#/$defs/nonEmptyString" },
+        "literalMeaning": { "$ref": "#/$defs/nonEmptyString" },
+        "actualMeaning": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "wordFamilyEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expression"],
+      "properties": {
+        "expression": { "$ref": "#/$defs/nonEmptyString" },
+        "partOfSpeech": { "$ref": "#/$defs/nonEmptyString" },
+        "meaning": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["english", "chinese"],
+      "properties": {
+        "english": { "$ref": "#/$defs/nonEmptyString" },
+        "chinese": { "$ref": "#/$defs/nonEmptyString" },
+        "context": { "$ref": "#/$defs/nonEmptyString" },
+        "note": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["terms", "coreDifference", "entries", "interchangeability"],
+      "properties": {
+        "terms": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "coreDifference": { "$ref": "#/$defs/nonEmptyString" },
+        "entries": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/comparisonEntry" }
+        },
+        "interchangeability": { "$ref": "#/$defs/interchangeability" },
+        "replacementEffect": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "comparisonEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["term", "coreConcept", "suitableContexts", "naturalness"],
+      "properties": {
+        "term": { "$ref": "#/$defs/nonEmptyString" },
+        "coreConcept": { "$ref": "#/$defs/nonEmptyString" },
+        "suitableContexts": { "$ref": "#/$defs/stringArray" },
+        "naturalness": {
+          "enum": ["nativeCommon", "natural", "contextDependent", "grammaticalButUnnatural", "unnatural"]
+        },
+        "register": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["informal", "neutral", "formal", "veryFormal", "technical"] }
+        },
+        "note": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "interchangeability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "explanation"],
+      "properties": {
+        "level": { "enum": ["yes", "sometimes", "no"] },
+        "explanation": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "sentenceAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "translation": { "$ref": "#/$defs/nonEmptyString" },
+        "chunks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/chunk" }
+        },
+        "patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/pattern" }
+        },
+        "unnaturalParts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/unnaturalPart" }
+        },
+        "correctedVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "simpleVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "naturalVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "workVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "formalVersion": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "chunk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "meaning"],
+      "properties": {
+        "text": { "$ref": "#/$defs/nonEmptyString" },
+        "meaning": { "$ref": "#/$defs/nonEmptyString" },
+        "role": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "pattern": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern", "explanation"],
+      "properties": {
+        "pattern": { "$ref": "#/$defs/nonEmptyString" },
+        "explanation": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "unnaturalPart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "issue", "explanation", "suggestion"],
+      "properties": {
+        "text": { "$ref": "#/$defs/nonEmptyString" },
+        "issue": { "$ref": "#/$defs/nonEmptyString" },
+        "explanation": { "$ref": "#/$defs/nonEmptyString" },
+        "suggestion": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "learningAdvice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shouldSave", "priority", "reason", "activeOrPassive", "recommendedPractice"],
+      "properties": {
+        "shouldSave": { "type": "boolean" },
+        "priority": {
+          "enum": ["mustLearn", "recommended", "recognitionOnly", "notNow"]
+        },
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "activeOrPassive": {
+          "enum": ["active", "passive", "both", "notApplicable"]
+        },
+        "recommendedPractice": { "$ref": "#/$defs/stringArray" }
+      }
+    }
+  }
+}

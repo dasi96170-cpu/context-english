@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_open_light_001",
+  "encounter": {
+    "originalInput": "Open the light.",
+    "inputType": "userWrittenEnglish",
+    "contextDescription": "使用者想表達把燈打開",
+    "primaryDomain": "dailyLife",
+    "sourceType": "typedText",
+    "sourceLanguage": "en"
+  },
+  "knowledgeItems": [
+    {
+      "type": "phrasalVerb",
+      "expression": "turn on",
+      "lemma": "turn on",
+      "partOfSpeech": "phrasal verb",
+      "currentMeaning": "啟動電燈或電器",
+      "coreConcept": "讓原本未運作的裝置開始運作",
+      "usage": {
+        "frequency": "veryCommon",
+        "naturalness": "nativeCommon",
+        "learningPriority": "mustLearn",
+        "vocabularyRole": "active"
+      },
+      "analysis": {
+        "whyThisWord": "英文使用 turn on 表示啟動電器或供電。",
+        "whyNotAlternatives": [
+          {
+            "alternative": "open",
+            "explanation": "open 通常表示打開具有開合狀態的東西，不是啟動電燈。"
+          }
+        ],
+        "examples": [
+          {
+            "english": "Please turn on the light.",
+            "chinese": "請把燈打開。",
+            "context": "daily life"
+          }
+        ]
+      }
+    }
+  ],
+  "sentenceAnalysis": {
+    "translation": "使用者想表達把燈打開。",
+    "unnaturalParts": [
+      {
+        "text": "Open the light",
+        "issue": "受到中文開燈的直接翻譯影響",
+        "explanation": "英文把燈視為需要啟動的裝置，因此使用 turn on。",
+        "suggestion": "Turn on the light."
+      }
+    ],
+    "correctedVersion": "Turn on the light.",
+    "naturalVersion": "Please turn on the light."
+  },
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "mustLearn",
+    "reason": "turn on 是高頻基本片語，也代表常見的中文直譯錯誤。",
+    "activeOrPassive": "active",
+    "recommendedPractice": [
+      "練習 turn on 和 turn off",
+      "比較 open、turn on 和 start"
+    ]
+  }
+}

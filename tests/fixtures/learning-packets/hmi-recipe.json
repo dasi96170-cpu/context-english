@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_hmi_recipe_001",
+  "encounter": {
+    "originalInput": "Recipe",
+    "inputType": "engineeringScreen",
+    "contextDescription": "HMI 畫面中的製程參數配方功能",
+    "primaryDomain": "engineering",
+    "subdomains": [
+      "HMI",
+      "industrial automation"
+    ],
+    "sourceType": "screenshot",
+    "sourceLanguage": "en",
+    "sourceLocation": "Recipe management screen",
+    "imageReference": "asset_hmi_recipe_001",
+    "originalQuestion": "HMI 裡的 Recipe 為什麼叫 recipe？"
+  },
+  "knowledgeItems": [
+    {
+      "type": "term",
+      "expression": "recipe",
+      "lemma": "recipe",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈresəpi/",
+      "syllables": [
+        "rec",
+        "i",
+        "pe"
+      ],
+      "stress": "第一音節",
+      "currentMeaning": "可儲存、載入與切換的一組製程參數",
+      "coreConcept": "把多項設定組合起來，以便重現特定結果",
+      "usage": {
+        "frequency": "domainCommon",
+        "register": [
+          "technical"
+        ],
+        "commonContexts": [
+          "HMI",
+          "batch processing",
+          "manufacturing"
+        ],
+        "learningPriority": "mustLearn",
+        "vocabularyRole": "both"
+      },
+      "analysis": {
+        "contextualMeaning": "HMI 中用來管理一組產品或製程參數的功能與資料集合。",
+        "whyThisWord": "工業 recipe 和一般食譜都把多個數值、條件或步驟組合起來，使特定結果可以重現。",
+        "namingLogic": "名稱從烹飪食譜延伸而來；材料與用量對應製程參數，成品對應要生產的結果。",
+        "whyNotAlternatives": [
+          {
+            "alternative": "settings",
+            "explanation": "settings 可泛指目前設定；recipe 更強調一整組可命名、儲存、載入和切換的參數。"
+          },
+          {
+            "alternative": "program",
+            "explanation": "program 通常強調控制邏輯；recipe 通常保存供既有程式使用的製程數值。"
+          }
+        ],
+        "multipleMeanings": [
+          {
+            "meaning": "烹飪食譜",
+            "contexts": [
+              "cooking"
+            ],
+            "frequency": "common"
+          },
+          {
+            "meaning": "可重複使用的一組製程參數",
+            "contexts": [
+              "HMI",
+              "industrial automation"
+            ],
+            "frequency": "domainCommon"
+          }
+        ],
+        "collocations": [
+          {
+            "expression": "load a recipe",
+            "meaning": "載入配方"
+          },
+          {
+            "expression": "save a recipe",
+            "meaning": "儲存配方"
+          },
+          {
+            "expression": "select a recipe",
+            "meaning": "選擇配方"
+          },
+          {
+            "expression": "recipe management",
+            "meaning": "配方管理"
+          }
+        ],
+        "examples": [
+          {
+            "english": "Select the correct recipe before starting production.",
+            "chinese": "開始生產前，請選擇正確的配方。",
+            "context": "HMI operation"
+          }
+        ]
+      }
+    }
+  ],
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "mustLearn",
+    "reason": "recipe 是 HMI 與製造系統常見術語，若只理解為食譜，會無法掌握畫面功能。",
+    "activeOrPassive": "both",
+    "recommendedPractice": [
+      "練習 load、save、select recipe 的搭配",
+      "用自己的設備參數描述一個 recipe"
+    ]
+  }
+}

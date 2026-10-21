@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_home_position_sentence_001",
+  "encounter": {
+    "originalInput": "The machine must return to the home position before the cycle can start.",
+    "inputType": "englishSentence",
+    "contextDescription": "自動化機台啟動條件說明",
+    "primaryDomain": "engineering",
+    "subdomains": [
+      "industrial automation",
+      "motion control"
+    ],
+    "sourceType": "typedText",
+    "sourceLanguage": "en"
+  },
+  "knowledgeItems": [
+    {
+      "type": "term",
+      "expression": "home position",
+      "currentMeaning": "機器預先定義的原點或基準位置",
+      "coreConcept": "設備返回後可作為動作與座標基準的位置",
+      "usage": {
+        "frequency": "domainCommon",
+        "register": [
+          "technical"
+        ],
+        "learningPriority": "mustLearn",
+        "vocabularyRole": "both"
+      },
+      "analysis": {
+        "namingLogic": "home 借用回到固定起點的概念，表示設備可返回的基準位置。",
+        "examples": [
+          {
+            "english": "Move the axis to the home position.",
+            "chinese": "將軸移動到原點位置。",
+            "context": "motion control"
+          }
+        ]
+      }
+    },
+    {
+      "type": "sentencePattern",
+      "expression": "must + base verb",
+      "currentMeaning": "必須做某事",
+      "coreConcept": "表示強制要求或必要條件"
+    }
+  ],
+  "sentenceAnalysis": {
+    "translation": "機器必須先回到原點位置，循環程序才能開始。",
+    "chunks": [
+      {
+        "text": "The machine",
+        "meaning": "這台機器",
+        "role": "subject"
+      },
+      {
+        "text": "must return to the home position",
+        "meaning": "必須回到原點位置",
+        "role": "required action"
+      },
+      {
+        "text": "before the cycle can start",
+        "meaning": "在循環程序能開始之前",
+        "role": "time and prerequisite clause"
+      }
+    ],
+    "patterns": [
+      {
+        "pattern": "must + base verb",
+        "explanation": "表示必須執行的動作。"
+      },
+      {
+        "pattern": "before + clause",
+        "explanation": "說明另一件事發生前必須先滿足的條件。"
+      }
+    ]
+  },
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "mustLearn",
+    "reason": "home position 與啟動條件句型在自動化工作中很常見。",
+    "activeOrPassive": "both",
+    "recommendedPractice": [
+      "用 home position 描述另一個機台動作",
+      "使用 before 寫一個啟動條件句"
+    ]
+  }
+}
