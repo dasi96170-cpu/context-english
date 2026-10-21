@@ -390,9 +390,17 @@ Inflection／Verb Forms（詞形變化）則是同一個 lemma 因文法需要�
 
 即使需要教 `operating` 的形容詞用法，也必須清楚區分「現在分詞／動名詞形式」與「值得獨立教學的詞彙功能」，不得自動把它當成核心 Word Family 成員。
 
+當使用者要求 Word Family 時，單純的 grammatical inflections／verb forms **不得**出現在 Word Family 成員列表、Word Family 表格、核心或最重要 Word Family 清單，以及以 Word Family 身分呈現的學習順序中。對 `operate` 而言，Word Family 可包含 `operate`、`operation`、`operator`、`operational`、`operationally`、`operable`、`operability`；`operates`、`operated`、`operating` 若屬於文法詞形，必須放在 Verb Forms、Related Forms、Usage、Collocations 或其他與核心 Word Family 明確分開的教學區塊。
+
+即使 `operating` 出現在 `operating temperature`、`operating conditions`、`operating system`、`operating costs` 等搭配中並具有名詞前修飾功能，也不能因此把 `operating` 整體重新分類為 `operate` 的核心 Word Family 成員。若這些用法值得教，可以在分開的區塊說明，但不得同時再把 `operating` 列入 Word Family 成員表。一次回答中不得同時宣稱「`operating` 是 `operate` 的 verb form」以及「`operating` 是 `operate` 的核心 Word Family 成員」。同一拼字形式具有多種文法或詞彙功能時，應依本次學習目的分欄或分區處理，不得讓它同時占據互相衝突的分類。
+
+Word Family 學習順序也必須遵守相同排除規則。例如 `operate → operation → operator → operational` 可以作為核心 Word Family 的建議學習順序；不得將單純 verb form `operating` 插入該序列。若 `operating` 很值得學，應另外標示，例如：`Related / grammatical form: operating — -ing form of operate; also common in expressions such as operating temperature.`
+
 CE Learning Packet v1 目前沒有 `verbForms` 專用欄位。動詞變化可在人類可讀教學、`analysis` 的情境說明或 `examples` 等合適位置說明；不得為了有地方保存，就把 verb forms 塞入 `wordFamily`。此限制不構成新增 Schema 欄位的理由。
 
 Word Family 是學習與使用上的詞族，不等於所有 etymologically related words。不要因為共同字源或拉丁詞根而無限制擴張。例如 `cooperate`、`cooperation`、`cooperative` 不應自動列入 `operate` 的核心 Word Family。若字源關係對理解確實有價值，可以另外簡短標示為 related by root／etymology，但必須與目前單字的核心 Word Family 分開。
+
+提及 `cooperate`、`cooperation`、`cooperative` 時，不得使用「extended Word Family」、「延伸家族」、「operate family branch」或其他容易使人誤認它們屬於 `operate` 核心 Word Family 的標題。若確有教學價值，只能以「字源相關詞（不是 `operate` 的核心 Word Family）」或「Related by root / etymology — not part of the core Word Family」等明確標題簡短補充，不得搶走目前學習詞的主要焦點。
 
 正確的 Word Family 例子：
 
@@ -408,6 +416,13 @@ Word Family 是學習與使用上的詞族，不等於所有 etymologically rela
 - `go` → `went / gone`
 
 如果某個形式同時具有獨立詞彙功能，必須依實際語境、使用方式與學習價值判斷，不能只依字尾決定分類。
+
+Regression example：當使用者問「`operate`，我想完整學這個字，尤其是它的 word family。」時，分類至少應符合：
+
+- Core Word Family：`operate`、`operation`、`operator`、`operational`
+- Verb Forms / Related Forms：`operates`、`operated`、`operating`
+- `operating` 可進一步說明 `operating temperature` 等常見修飾用法，但不得再次出現在 Core Word Family。
+- 若提及 `cooperate`，必須明確標示為字源相關但不是核心 Word Family。
 
 ### 6.4 情境式例句
 
