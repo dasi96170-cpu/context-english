@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_equipment_zh_001",
+  "encounter": {
+    "originalInput": "設備",
+    "inputType": "chineseConcept",
+    "primaryDomain": "general",
+    "sourceType": "typedText",
+    "sourceLanguage": "zh-Hant"
+  },
+  "knowledgeItems": [
+    {
+      "type": "word",
+      "expression": "device",
+      "lemma": "device",
+      "currentMeaning": "具有特定用途的單一裝置",
+      "coreConcept": "可個別識別的功能性裝置"
+    },
+    {
+      "type": "word",
+      "expression": "equipment",
+      "lemma": "equipment",
+      "currentMeaning": "完成某項工作所需的設備總稱",
+      "coreConcept": "作業所需工具或設備的集合"
+    },
+    {
+      "type": "word",
+      "expression": "machine",
+      "lemma": "machine",
+      "currentMeaning": "執行機械工作或生產工作的機器",
+      "coreConcept": "利用動力與機械結構完成工作"
+    },
+    {
+      "type": "word",
+      "expression": "unit",
+      "lemma": "unit",
+      "currentMeaning": "較大系統中的一個單元",
+      "coreConcept": "可被視為一體的一個組成單元"
+    }
+  ],
+  "comparisons": [
+    {
+      "terms": [
+        "device",
+        "equipment",
+        "machine",
+        "unit"
+      ],
+      "coreDifference": "device 強調單一功能裝置；equipment 強調設備集合；machine 強調機械工作；unit 強調系統單元。",
+      "entries": [
+        {
+          "term": "device",
+          "coreConcept": "單一功能裝置",
+          "suitableContexts": [
+            "electronics",
+            "software",
+            "networking"
+          ],
+          "naturalness": "nativeCommon"
+        },
+        {
+          "term": "equipment",
+          "coreConcept": "工作所需設備的集合",
+          "suitableContexts": [
+            "factory equipment",
+            "office equipment"
+          ],
+          "naturalness": "nativeCommon",
+          "note": "通常不可數"
+        },
+        {
+          "term": "machine",
+          "coreConcept": "執行機械工作的機器",
+          "suitableContexts": [
+            "manufacturing",
+            "CNC"
+          ],
+          "naturalness": "nativeCommon"
+        },
+        {
+          "term": "unit",
+          "coreConcept": "系統中的一個完整單元",
+          "suitableContexts": [
+            "air-conditioning",
+            "modular systems"
+          ],
+          "naturalness": "contextDependent"
+        }
+      ],
+      "interchangeability": {
+        "level": "sometimes",
+        "explanation": "四個詞都可能譯為設備，但必須依單一裝置、集合設備、機械工作或系統單元選擇。"
+      }
+    }
+  ],
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "mustLearn",
+    "reason": "這是一組高實用性且中文容易混為同一詞的選字問題。",
+    "activeOrPassive": "both",
+    "recommendedPractice": [
+      "使用實際情境練習選字",
+      "練習 equipment 的不可數用法"
+    ]
+  }
+}

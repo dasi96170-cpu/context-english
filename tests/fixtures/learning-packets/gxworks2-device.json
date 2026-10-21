@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_gxw2_device_001",
+  "encounter": {
+    "originalInput": "device",
+    "inputType": "engineeringScreen",
+    "contextDescription": "GX Works2 畫面中出現 Used devices 與 All devices",
+    "primaryDomain": "engineering",
+    "subdomains": [
+      "PLC",
+      "Mitsubishi PLC",
+      "GX Works2"
+    ],
+    "sourceType": "screenshot",
+    "sourceLanguage": "en",
+    "sourceName": "GX Works2",
+    "sourceLocation": "Device List",
+    "imageReference": "asset_gxw2_device_list_001",
+    "originalQuestion": "這裡的 device 是什麼意思？"
+  },
+  "knowledgeItems": [
+    {
+      "type": "term",
+      "expression": "device",
+      "lemma": "device",
+      "partOfSpeech": "noun",
+      "ipa": "/dɪˈvaɪs/",
+      "syllables": [
+        "de",
+        "vice"
+      ],
+      "stress": "第二音節",
+      "currentMeaning": "Mitsubishi PLC 程式中以 device code 和編號引用的元件、operand 或資料／控制區域",
+      "coreConcept": "GX Works2 用來統稱 PLC 程式中可被定址或引用之項目的廠商術語",
+      "usage": {
+        "register": [
+          "technical"
+        ],
+        "commonContexts": [
+          "Mitsubishi PLC programming",
+          "GX Works2 Device List"
+        ],
+        "learningPriority": "mustLearn",
+        "vocabularyRole": "both"
+      },
+      "analysis": {
+        "contextualMeaning": "Used devices 與 All devices 中的 device 指 PLC 程式使用或可顯示的 device 位址或元件，例如 X、Y、M、D、T、C。",
+        "whyThisWord": "這是 Mitsubishi PLC 生態中的廠商術語，用於統稱可由程式以 device code 和編號引用的項目。",
+        "whyNotAlternatives": [
+          {
+            "alternative": "equipment",
+            "explanation": "equipment 指硬體設備的集合，不適合表示 D100、M0 或 T0 等 PLC 程式 operand。"
+          }
+        ],
+        "multipleMeanings": [
+          {
+            "meaning": "Mitsubishi PLC 中可定址或可被程式引用的 device 元件",
+            "contexts": [
+              "GX Works2",
+              "Mitsubishi PLC programming"
+            ]
+          },
+          {
+            "meaning": "一般英文中的單一功能裝置",
+            "contexts": [
+              "electronics",
+              "software",
+              "networking"
+            ]
+          }
+        ],
+        "examples": [
+          {
+            "english": "Select Used devices to display only the device addresses referenced by the program.",
+            "chinese": "選擇 Used devices，只顯示程式中有引用的 device 位址。",
+            "context": "GX Works2 Device List"
+          }
+        ]
+      }
+    }
+  ],
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "mustLearn",
+    "reason": "這是 Mitsubishi PLC 的重要廠商術語，若按一般英文理解，容易誤認為實體裝置。",
+    "activeOrPassive": "both",
+    "recommendedPractice": [
+      "辨認 X、Y、M、D、T、C 等常見 device code",
+      "比較 Mitsubishi device terminology 與一般英文 device"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_apple_basic_001",
+  "encounter": {
+    "originalInput": "apple",
+    "inputType": "englishWord",
+    "primaryDomain": "general",
+    "sourceType": "typedText",
+    "sourceLanguage": "en"
+  },
+  "knowledgeItems": [
+    {
+      "type": "word",
+      "expression": "apple",
+      "lemma": "apple",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈæpəl/",
+      "syllables": [
+        "ap",
+        "ple"
+      ],
+      "stress": "第一音節",
+      "currentMeaning": "蘋果",
+      "coreConcept": "一種常見的圓形果實",
+      "usage": {
+        "frequency": "veryCommon",
+        "register": [
+          "neutral"
+        ],
+        "naturalness": "nativeCommon",
+        "learningPriority": "mustLearn",
+        "vocabularyRole": "active"
+      },
+      "analysis": {
+        "examples": [
+          {
+            "english": "I ate an apple.",
+            "chinese": "我吃了一顆蘋果。"
+          }
+        ]
+      }
+    }
+  ],
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "mustLearn",
+    "reason": "這是非常常見的基礎名詞。",
+    "activeOrPassive": "active",
+    "recommendedPractice": [
+      "練習單數與複數形式"
+    ]
+  }
+}

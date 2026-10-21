@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_look_see_watch_001",
+  "encounter": {
+    "originalInput": "look / see / watch",
+    "inputType": "comparison",
+    "primaryDomain": "general",
+    "sourceType": "typedText",
+    "sourceLanguage": "en"
+  },
+  "knowledgeItems": [
+    {
+      "type": "word",
+      "expression": "look",
+      "lemma": "look",
+      "partOfSpeech": "verb",
+      "currentMeaning": "主動把視線移向某處",
+      "coreConcept": "有意識地使用視線"
+    },
+    {
+      "type": "word",
+      "expression": "see",
+      "lemma": "see",
+      "partOfSpeech": "verb",
+      "currentMeaning": "看見或察覺到視覺資訊",
+      "coreConcept": "視覺資訊進入感知"
+    },
+    {
+      "type": "word",
+      "expression": "watch",
+      "lemma": "watch",
+      "partOfSpeech": "verb",
+      "currentMeaning": "持續觀看活動、變化或過程",
+      "coreConcept": "在一段時間內注意地觀看"
+    }
+  ],
+  "comparisons": [
+    {
+      "terms": [
+        "look",
+        "see",
+        "watch"
+      ],
+      "coreDifference": "look 強調主動移動視線；see 強調看見的結果；watch 強調持續觀看變化。",
+      "entries": [
+        {
+          "term": "look",
+          "coreConcept": "主動把視線轉向目標",
+          "suitableContexts": [
+            "look at the screen",
+            "look outside"
+          ],
+          "naturalness": "nativeCommon"
+        },
+        {
+          "term": "see",
+          "coreConcept": "實際看見或察覺",
+          "suitableContexts": [
+            "see an alarm",
+            "see a problem"
+          ],
+          "naturalness": "nativeCommon"
+        },
+        {
+          "term": "watch",
+          "coreConcept": "持續觀看活動或過程",
+          "suitableContexts": [
+            "watch a machine",
+            "watch a video"
+          ],
+          "naturalness": "nativeCommon"
+        }
+      ],
+      "interchangeability": {
+        "level": "sometimes",
+        "explanation": "三者都與視覺有關，但替換會改變主動看、看見結果或持續觀察的焦點。"
+      },
+      "replacementEffect": "Look at the machine 是把視線移向機器；see the machine 是看得到機器；watch the machine 是持續觀察機器。"
+    }
+  ],
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "mustLearn",
+    "reason": "三者非常常見，而且中文都可能翻成看。",
+    "activeOrPassive": "active",
+    "recommendedPractice": [
+      "使用同一名詞分別搭配三個動詞",
+      "完成情境選字題"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0",
+  "packetId": "cep_piece_of_cake_001",
+  "encounter": {
+    "originalInput": "a piece of cake",
+    "inputType": "englishPhrase",
+    "primaryDomain": "general",
+    "sourceType": "typedText",
+    "sourceLanguage": "en"
+  },
+  "knowledgeItems": [
+    {
+      "type": "idiom",
+      "expression": "a piece of cake",
+      "currentMeaning": "非常簡單、輕而易舉的事情",
+      "coreConcept": "用輕鬆享用一塊蛋糕的感覺比喻事情毫不困難",
+      "usage": {
+        "frequency": "common",
+        "register": [
+          "informal"
+        ],
+        "commonContexts": [
+          "daily conversation",
+          "casual workplace conversation"
+        ],
+        "naturalness": "nativeCommon",
+        "learningPriority": "recommended",
+        "vocabularyRole": "both"
+      },
+      "analysis": {
+        "literalMeaning": "一塊蛋糕",
+        "actualMeaning": "非常容易完成的事情",
+        "examples": [
+          {
+            "english": "The setup was a piece of cake.",
+            "chinese": "這次設定非常簡單。",
+            "context": "casual workplace conversation"
+          }
+        ]
+      }
+    }
+  ],
+  "learningAdvice": {
+    "shouldSave": true,
+    "priority": "recommended",
+    "reason": "這是常見口語慣用語，值得理解並在輕鬆情境使用。",
+    "activeOrPassive": "both",
+    "recommendedPractice": [
+      "判斷正式與非正式使用情境",
+      "用最近完成的簡單工作造句"
+    ]
+  }
+}
