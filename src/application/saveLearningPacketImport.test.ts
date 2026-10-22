@@ -2,12 +2,18 @@ import "fake-indexeddb/auto";
 
 import { describe, expect, it } from "vitest";
 
+import appleBasic from "../../tests/fixtures/learning-packets/apple-basic.json";
 import chineseEquipment from "../../tests/fixtures/learning-packets/chinese-equipment.json";
 import pieceOfCake from "../../tests/fixtures/learning-packets/piece-of-cake.json";
 import type { ImportCandidate } from "../domain/importCandidate";
 import { ContextEnglishDatabase } from "../infrastructure/database/database";
+import { inspectLearningPacketImport } from "./inspectLearningPacketImport";
 import { prepareLearningPacketImport } from "./prepareLearningPacketImport";
-import { saveLearningPacketImport } from "./saveLearningPacketImport";
+import {
+  ExactDuplicateImportError,
+  SourcePacketIdConflictError,
+  saveLearningPacketImport,
+} from "./saveLearningPacketImport";
 
 const importedAt = "2026-10-22T12:00:00.000Z";
 
@@ -42,11 +48,15 @@ describe("saveLearningPacketImport", () => {
     ];
 
     try {
-      const saved = await saveLearningPacketImport(candidate, {
-        database,
-        now: () => importedAt,
-        randomUUID: idSequence(ids),
-      });
+      const saved = await saveLearningPacketImport(
+        candidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(ids),
+        },
+      );
 
       expect(saved).toEqual({
         packetId: "packet-id",
@@ -109,11 +119,15 @@ describe("saveLearningPacketImport", () => {
 
     try {
       await expect(
-        saveLearningPacketImport(candidate, {
-          database,
-          now: () => importedAt,
-          randomUUID: duplicateKnowledgeItemIds,
-        }),
+        saveLearningPacketImport(
+          candidate,
+          {},
+          {
+            database,
+            now: () => importedAt,
+            randomUUID: duplicateKnowledgeItemIds,
+          },
+        ),
       ).rejects.toThrow();
 
       expect(await database.packets.count()).toBe(0);
@@ -129,11 +143,15 @@ describe("saveLearningPacketImport", () => {
     const candidate = await candidateFrom(pieceOfCake);
 
     try {
-      await saveLearningPacketImport(candidate, {
-        database,
-        now: () => importedAt,
-        randomUUID: idSequence(["packet-id", "encounter-id", "knowledge-id"]),
-      });
+      await saveLearningPacketImport(
+        candidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(["packet-id", "encounter-id", "knowledge-id"]),
+        },
+      );
 
       const knowledgeItem = await database.knowledgeItems.get("knowledge-id");
       expect(knowledgeItem).not.toHaveProperty("normalizedLemma");
@@ -147,18 +165,22 @@ describe("saveLearningPacketImport", () => {
     const firstConnection = new ContextEnglishDatabase(name);
     const candidate = await candidateFrom(chineseEquipment);
 
-    await saveLearningPacketImport(candidate, {
-      database: firstConnection,
-      now: () => importedAt,
-      randomUUID: idSequence([
-        "packet-id",
-        "encounter-id",
-        "knowledge-id-0",
-        "knowledge-id-1",
-        "knowledge-id-2",
-        "knowledge-id-3",
-      ]),
-    });
+    await saveLearningPacketImport(
+      candidate,
+      {},
+      {
+        database: firstConnection,
+        now: () => importedAt,
+        randomUUID: idSequence([
+          "packet-id",
+          "encounter-id",
+          "knowledge-id-0",
+          "knowledge-id-1",
+          "knowledge-id-2",
+          "knowledge-id-3",
+        ]),
+      },
+    );
     firstConnection.close();
 
     const reopenedConnection = new ContextEnglishDatabase(name);
@@ -168,6 +190,191 @@ describe("saveLearningPacketImport", () => {
       expect(await reopenedConnection.knowledgeItems.count()).toBe(4);
     } finally {
       await reopenedConnection.delete();
+    }
+  });
+
+  it("rejects a second save of the same content without adding records", async () => {
+    const database = new ContextEnglishDatabase(databaseName("exact-duplicate"));
+    const candidate = await candidateFrom(appleBasic);
+
+    try {
+      await saveLearningPacketImport(
+        candidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(["packet-1", "encounter-1", "knowledge-1"]),
+        },
+      );
+
+      await expect(
+        saveLearningPacketImport(
+          candidate,
+          {},
+          {
+            database,
+            now: () => importedAt,
+            randomUUID: idSequence(["packet-2", "encounter-2", "knowledge-2"]),
+          },
+        ),
+      ).rejects.toBeInstanceOf(ExactDuplicateImportError);
+
+      expect(await database.packets.count()).toBe(1);
+      expect(await database.encounters.count()).toBe(1);
+      expect(await database.knowledgeItems.count()).toBe(1);
+    } finally {
+      await database.delete();
+    }
+  });
+
+  it("rejects different content with the same source Packet ID by default", async () => {
+    const database = new ContextEnglishDatabase(databaseName("source-deny"));
+    const originalCandidate = await candidateFrom(appleBasic);
+    const changedPacket = structuredClone(appleBasic);
+    changedPacket.encounter.originalInput = "green apple";
+    const changedCandidate = await candidateFrom(changedPacket);
+
+    try {
+      await saveLearningPacketImport(
+        originalCandidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(["packet-1", "encounter-1", "knowledge-1"]),
+        },
+      );
+
+      await expect(
+        saveLearningPacketImport(
+          changedCandidate,
+          {},
+          {
+            database,
+            now: () => importedAt,
+            randomUUID: idSequence(["packet-2", "encounter-2", "knowledge-2"]),
+          },
+        ),
+      ).rejects.toBeInstanceOf(SourcePacketIdConflictError);
+
+      expect(await database.packets.count()).toBe(1);
+      expect(await database.encounters.count()).toBe(1);
+      expect(await database.knowledgeItems.count()).toBe(1);
+    } finally {
+      await database.delete();
+    }
+  });
+
+  it("allows an explicitly confirmed source Packet ID conflict without overwriting", async () => {
+    const database = new ContextEnglishDatabase(databaseName("source-allow"));
+    const originalCandidate = await candidateFrom(appleBasic);
+    const changedPacket = structuredClone(appleBasic);
+    changedPacket.encounter.originalInput = "green apple";
+    const changedCandidate = await candidateFrom(changedPacket);
+
+    try {
+      await saveLearningPacketImport(
+        originalCandidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(["packet-1", "encounter-1", "knowledge-1"]),
+        },
+      );
+      const originalRecord = await database.packets.get("packet-1");
+
+      await saveLearningPacketImport(
+        changedCandidate,
+        { allowSourcePacketIdConflict: true },
+        {
+          database,
+          now: () => "2026-10-22T13:00:00.000Z",
+          randomUUID: idSequence(["packet-2", "encounter-2", "knowledge-2"]),
+        },
+      );
+
+      expect(await database.packets.count()).toBe(2);
+      expect(await database.packets.get("packet-1")).toEqual(originalRecord);
+      expect(await database.packets.get("packet-2")).toMatchObject({
+        sourcePacketId: originalCandidate.sourceDocument.packetId,
+        contentSha256: changedCandidate.contentSha256,
+      });
+    } finally {
+      await database.delete();
+    }
+  });
+
+  it("allows expression overlap across different Packets", async () => {
+    const database = new ContextEnglishDatabase(databaseName("expression-overlap"));
+    const firstCandidate = await candidateFrom(appleBasic);
+    const anotherPacket = structuredClone(appleBasic);
+    anotherPacket.packetId = "cep_apple_another_encounter_001";
+    const secondCandidate = await candidateFrom(anotherPacket);
+
+    try {
+      await saveLearningPacketImport(
+        firstCandidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(["packet-1", "encounter-1", "knowledge-1"]),
+        },
+      );
+      await saveLearningPacketImport(
+        secondCandidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(["packet-2", "encounter-2", "knowledge-2"]),
+        },
+      );
+
+      expect(await database.packets.count()).toBe(2);
+      expect(await database.encounters.count()).toBe(2);
+      expect(await database.knowledgeItems.count()).toBe(2);
+    } finally {
+      await database.delete();
+    }
+  });
+
+  it("blocks a stale inspected candidate when another save imported it first", async () => {
+    const database = new ContextEnglishDatabase(databaseName("stale-inspection"));
+    const candidate = await candidateFrom(appleBasic);
+
+    try {
+      expect(await inspectLearningPacketImport(candidate, database)).toEqual({
+        sourcePacketIdConflicts: [],
+        expressionMatches: [],
+      });
+
+      await saveLearningPacketImport(
+        candidate,
+        {},
+        {
+          database,
+          now: () => importedAt,
+          randomUUID: idSequence(["packet-1", "encounter-1", "knowledge-1"]),
+        },
+      );
+
+      await expect(
+        saveLearningPacketImport(
+          candidate,
+          {},
+          {
+            database,
+            now: () => importedAt,
+            randomUUID: idSequence(["packet-2", "encounter-2", "knowledge-2"]),
+          },
+        ),
+      ).rejects.toBeInstanceOf(ExactDuplicateImportError);
+      expect(await database.packets.count()).toBe(1);
+    } finally {
+      await database.delete();
     }
   });
 });

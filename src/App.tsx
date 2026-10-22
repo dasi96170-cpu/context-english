@@ -1,13 +1,19 @@
 import { useState } from "react";
 
 import {
+  inspectLearningPacketImport,
+} from "./application/inspectLearningPacketImport";
+import {
   prepareLearningPacketImport,
   type PrepareLearningPacketImportResult,
 } from "./application/prepareLearningPacketImport";
 import {
+  ExactDuplicateImportError,
+  SourcePacketIdConflictError,
   saveLearningPacketImport,
   type SavedLearningPacketImport,
 } from "./application/saveLearningPacketImport";
+import type { ImportConflictReport } from "./domain/importConflictReport";
 
 export function App() {
   const [jsonText, setJsonText] = useState("");
@@ -16,25 +22,80 @@ export function App() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState<SavedLearningPacketImport | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [conflictReport, setConflictReport] = useState<ImportConflictReport | null>(
+    null,
+  );
+  const [inspecting, setInspecting] = useState(false);
+  const [inspectionError, setInspectionError] = useState<string | null>(null);
+  const [allowSourcePacketIdConflict, setAllowSourcePacketIdConflict] =
+    useState(false);
 
   async function prepareImport() {
     setPreparing(true);
     setSaved(null);
     setSaveError(null);
-    setResult(await prepareLearningPacketImport(jsonText));
+    setConflictReport(null);
+    setInspectionError(null);
+    setAllowSourcePacketIdConflict(false);
+
+    const prepared = await prepareLearningPacketImport(jsonText);
+    setResult(prepared);
+
+    if (prepared.success) {
+      setInspecting(true);
+      try {
+        setConflictReport(await inspectLearningPacketImport(prepared.candidate));
+      } catch (error) {
+        setInspectionError(
+          error instanceof Error ? error.message : "Unable to inspect local conflicts.",
+        );
+      } finally {
+        setInspecting(false);
+      }
+    }
+
     setPreparing(false);
   }
 
   async function saveImport() {
-    if (!candidate || saving || saved) return;
+    if (
+      !candidate ||
+      !conflictReport ||
+      conflictReport.exactDuplicate ||
+      (conflictReport.sourcePacketIdConflicts.length > 0 &&
+        !allowSourcePacketIdConflict) ||
+      saving ||
+      saved
+    ) {
+      return;
+    }
 
     setSaving(true);
     setSaveError(null);
 
     try {
-      setSaved(await saveLearningPacketImport(candidate));
+      setSaved(
+        await saveLearningPacketImport(candidate, {
+          allowSourcePacketIdConflict,
+        }),
+      );
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : "Unable to save locally.");
+      if (
+        error instanceof ExactDuplicateImportError ||
+        error instanceof SourcePacketIdConflictError
+      ) {
+        try {
+          setConflictReport(await inspectLearningPacketImport(candidate));
+          setAllowSourcePacketIdConflict(false);
+        } catch (inspectionFailure) {
+          setInspectionError(
+            inspectionFailure instanceof Error
+              ? inspectionFailure.message
+              : "Unable to refresh local conflicts.",
+          );
+        }
+      }
     } finally {
       setSaving(false);
     }
@@ -57,6 +118,9 @@ export function App() {
           setResult(null);
           setSaved(null);
           setSaveError(null);
+          setConflictReport(null);
+          setInspectionError(null);
+          setAllowSourcePacketIdConflict(false);
         }}
         rows={18}
         spellCheck={false}
@@ -156,17 +220,92 @@ export function App() {
             </dl>
           </details>
 
+          <h3>Local conflict check</h3>
+          {inspecting && <p>Checking local data…</p>}
+          {inspectionError && (
+            <p className="save-error" role="alert">{inspectionError}</p>
+          )}
+
+          {conflictReport?.exactDuplicate && (
+            <div className="conflict conflict-blocking" role="alert">
+              <strong>This packet has already been imported.</strong>
+              <dl>
+                <dt>Existing Packet ID</dt>
+                <dd><code>{conflictReport.exactDuplicate.existingPacketId}</code></dd>
+                <dt>Source Packet ID</dt>
+                <dd><code>{conflictReport.exactDuplicate.sourcePacketId}</code></dd>
+              </dl>
+            </div>
+          )}
+
+          {conflictReport && conflictReport.sourcePacketIdConflicts.length > 0 && (
+            <div className="conflict conflict-warning">
+              <strong>
+                The same source packet ID already exists with different content.
+              </strong>
+              <p>
+                Found {conflictReport.sourcePacketIdConflicts.length} existing local
+                packet(s).
+              </p>
+              <ul>
+                {conflictReport.sourcePacketIdConflicts.map((conflict) => (
+                  <li key={conflict.existingPacketId}>
+                    <code>{conflict.existingPacketId}</code> —{" "}
+                    <code>{conflict.contentSha256}</code>
+                  </li>
+                ))}
+              </ul>
+              <label className="conflict-confirmation">
+                <input
+                  type="checkbox"
+                  checked={allowSourcePacketIdConflict}
+                  onChange={(event) =>
+                    setAllowSourcePacketIdConflict(event.target.checked)
+                  }
+                />
+                I understand this source packet ID already exists with different
+                content and want to save this as a separate local packet.
+              </label>
+            </div>
+          )}
+
+          {conflictReport && conflictReport.expressionMatches.length > 0 && (
+            <div className="conflict conflict-info">
+              <strong>Existing knowledge items use the same expression:</strong>
+              <ul>
+                {conflictReport.expressionMatches.map((match) => (
+                  <li key={match.normalizedExpression}>
+                    {match.expression} ({match.existingMatchCount})
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {conflictReport &&
+            !conflictReport.exactDuplicate &&
+            conflictReport.sourcePacketIdConflicts.length === 0 &&
+            conflictReport.expressionMatches.length === 0 && (
+              <p>No local conflicts found.</p>
+            )}
+
           <div className="save-actions">
             <button
               type="button"
               onClick={() => void saveImport()}
-              disabled={saving || saved !== null}
+              disabled={
+                saving ||
+                saved !== null ||
+                inspecting ||
+                conflictReport === null ||
+                inspectionError !== null ||
+                conflictReport?.exactDuplicate !== undefined ||
+                (conflictReport.sourcePacketIdConflicts.length > 0 &&
+                  !allowSourcePacketIdConflict)
+              }
             >
               {saving ? "Saving…" : saved ? "Saved" : "Save to Library"}
             </button>
-            <small>
-              此 checkpoint 尚未檢查重新匯入的重複 Packet。
-            </small>
           </div>
 
           {saved && (

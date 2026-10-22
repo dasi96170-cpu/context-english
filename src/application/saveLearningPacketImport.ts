@@ -1,4 +1,5 @@
 import type { ImportCandidate } from "../domain/importCandidate";
+import type { ExistingPacketConflict } from "../domain/importConflictReport";
 import { normalizeExpression } from "../domain/normalizeExpression";
 import {
   contextEnglishDatabase,
@@ -22,8 +23,27 @@ export interface SaveLearningPacketImportDependencies {
   randomUUID?: () => string;
 }
 
+export interface SaveLearningPacketImportOptions {
+  allowSourcePacketIdConflict?: boolean;
+}
+
+export class ExactDuplicateImportError extends Error {
+  constructor(public readonly existingPacket: ExistingPacketConflict) {
+    super(`Packet content has already been imported as ${existingPacket.existingPacketId}.`);
+    this.name = "ExactDuplicateImportError";
+  }
+}
+
+export class SourcePacketIdConflictError extends Error {
+  constructor(public readonly existingPackets: ExistingPacketConflict[]) {
+    super("The source packet ID already exists with different content.");
+    this.name = "SourcePacketIdConflictError";
+  }
+}
+
 export async function saveLearningPacketImport(
   candidate: ImportCandidate,
+  options: SaveLearningPacketImportOptions = {},
   dependencies: SaveLearningPacketImportDependencies = {},
 ): Promise<SavedLearningPacketImport> {
   const database = dependencies.database ?? contextEnglishDatabase;
@@ -99,6 +119,38 @@ export async function saveLearningPacketImport(
     database.encounters,
     database.knowledgeItems,
     async () => {
+      const exactDuplicate = await database.packets
+        .where("contentSha256")
+        .equals(candidate.contentSha256)
+        .first();
+
+      if (exactDuplicate) {
+        throw new ExactDuplicateImportError({
+          existingPacketId: exactDuplicate.id,
+          sourcePacketId: exactDuplicate.sourcePacketId,
+          contentSha256: exactDuplicate.contentSha256,
+        });
+      }
+
+      const sourcePacketIdConflicts = await database.packets
+        .where("sourcePacketId")
+        .equals(sourceDocument.packetId)
+        .filter((packet) => packet.contentSha256 !== candidate.contentSha256)
+        .toArray();
+
+      if (
+        sourcePacketIdConflicts.length > 0 &&
+        !options.allowSourcePacketIdConflict
+      ) {
+        throw new SourcePacketIdConflictError(
+          sourcePacketIdConflicts.map((packet) => ({
+            existingPacketId: packet.id,
+            sourcePacketId: packet.sourcePacketId,
+            contentSha256: packet.contentSha256,
+          })),
+        );
+      }
+
       await database.packets.add(packetRecord);
       await database.encounters.add(encounterRecord);
       await database.knowledgeItems.bulkAdd(knowledgeItemRecords);
