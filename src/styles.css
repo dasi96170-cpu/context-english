@@ -85,3 +85,20 @@ dd {
 details {
   margin-top: 1.5rem;
 }
+
+.save-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.save-status {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #dcfce7;
+}
+
+.save-error {
+  color: #991b1b;
+}

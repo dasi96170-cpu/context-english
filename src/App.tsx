@@ -4,16 +4,40 @@ import {
   prepareLearningPacketImport,
   type PrepareLearningPacketImportResult,
 } from "./application/prepareLearningPacketImport";
+import {
+  saveLearningPacketImport,
+  type SavedLearningPacketImport,
+} from "./application/saveLearningPacketImport";
 
 export function App() {
   const [jsonText, setJsonText] = useState("");
   const [result, setResult] = useState<PrepareLearningPacketImportResult | null>(null);
   const [preparing, setPreparing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState<SavedLearningPacketImport | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   async function prepareImport() {
     setPreparing(true);
+    setSaved(null);
+    setSaveError(null);
     setResult(await prepareLearningPacketImport(jsonText));
     setPreparing(false);
+  }
+
+  async function saveImport() {
+    if (!candidate || saving || saved) return;
+
+    setSaving(true);
+    setSaveError(null);
+
+    try {
+      setSaved(await saveLearningPacketImport(candidate));
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : "Unable to save locally.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   const candidate = result?.success ? result.candidate : null;
@@ -31,6 +55,8 @@ export function App() {
         onChange={(event) => {
           setJsonText(event.target.value);
           setResult(null);
+          setSaved(null);
+          setSaveError(null);
         }}
         rows={18}
         spellCheck={false}
@@ -129,6 +155,35 @@ export function App() {
               <dd><code>{candidate.contentSha256}</code></dd>
             </dl>
           </details>
+
+          <div className="save-actions">
+            <button
+              type="button"
+              onClick={() => void saveImport()}
+              disabled={saving || saved !== null}
+            >
+              {saving ? "Saving…" : saved ? "Saved" : "Save to Library"}
+            </button>
+            <small>
+              此 checkpoint 尚未檢查重新匯入的重複 Packet。
+            </small>
+          </div>
+
+          {saved && (
+            <div className="save-status" role="status">
+              <strong>Saved locally</strong>
+              <dl>
+                <dt>Packet internal ID</dt>
+                <dd><code>{saved.packetId}</code></dd>
+                <dt>Encounter ID</dt>
+                <dd><code>{saved.encounterId}</code></dd>
+                <dt>Knowledge Items</dt>
+                <dd>{saved.knowledgeItemIds.length}</dd>
+              </dl>
+            </div>
+          )}
+
+          {saveError && <p className="save-error" role="alert">{saveError}</p>}
         </section>
       )}
 

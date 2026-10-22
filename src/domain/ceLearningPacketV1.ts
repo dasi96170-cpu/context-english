@@ -12,15 +12,19 @@ export interface CeLearningPacketEncounterV1 {
   inputType: string;
   contextDescription?: string;
   primaryDomain: string;
+  subdomains?: string[];
   sourceType: string;
   sourceLanguage: "en" | "zh-Hant" | "mixed" | "und";
   sourceName?: string;
   sourceLocation?: string;
+  encounteredAt?: string;
+  imageReference?: string;
 }
 
 export interface CeLearningPacketKnowledgeItemV1 {
   type: KnowledgeItemType;
   expression: string;
+  lemma?: string;
   currentMeaning: string;
   coreConcept: string;
 }
