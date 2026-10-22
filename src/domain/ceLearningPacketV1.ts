@@ -10,9 +10,12 @@ export type KnowledgeItemType =
 export interface CeLearningPacketEncounterV1 {
   originalInput: string;
   inputType: string;
+  contextDescription?: string;
   primaryDomain: string;
   sourceType: string;
   sourceLanguage: "en" | "zh-Hant" | "mixed" | "und";
+  sourceName?: string;
+  sourceLocation?: string;
 }
 
 export interface CeLearningPacketKnowledgeItemV1 {

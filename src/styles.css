@@ -38,6 +38,10 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: wait;
+}
+
 .result {
   margin-top: 1.5rem;
   padding: 1rem;
@@ -52,4 +56,32 @@ button {
 .invalid {
   border-color: #b91c1c;
   background: #fef2f2;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.4fr) 1fr;
+  gap: 0.4rem 1rem;
+}
+
+dt {
+  font-weight: 600;
+}
+
+dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.knowledge-items {
+  padding-left: 1.5rem;
+}
+
+.knowledge-items li {
+  margin-bottom: 1rem;
+}
+
+details {
+  margin-top: 1.5rem;
 }
